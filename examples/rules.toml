@@ -1,0 +1,24 @@
+# Example rules file. Pass it with --config:
+#
+#     uv run file-organiser organise ~/Downloads --config examples/rules.toml
+#
+# Categories merge over the built-in defaults *per extension*, so defining
+# "photos" below re-routes those four extensions and leaves every other default
+# category (documents, videos, archives, code, ...) exactly as it was.
+#
+# An extension may only be claimed by one category. Adding "png" to a second
+# category here would be a configuration error, and the tool refuses to run
+# rather than pick one silently.
+
+[categories]
+photos = ["jpg", "jpeg", "png", "heic"]
+notebooks = ["ipynb"]
+
+[settings]
+# Names or globs to skip entirely. These are added to the built-in exclusions
+# (.git, node_modules, .venv, and the tool's own .file-organiser store).
+exclude = [
+  "Work",
+  "*.tmp",
+  "important-folder",
+]

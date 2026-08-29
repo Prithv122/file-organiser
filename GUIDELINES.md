@@ -18,14 +18,14 @@ runtime network or DB dependencies.
 
 ## Acceptance criteria
 
-- [ ] `scan` reports counts by category, total size, duplicate-candidate stats — read-only
-- [ ] `organise --by-type` / `--by-date` / both, driven by a configurable rules file
-- [ ] `dedupe` uses size → partial hash → SHA-256 tiering, never filename/size alone
-- [ ] Every modifying command defaults to dry-run; `--apply` required to act; never silent-overwrite
-- [ ] Every modifying command writes a transaction log; `undo <id>` restores it
-- [ ] Protected-path guardrail blocks OS/`.git`/venv/`node_modules` dirs unless overridden
-- [ ] Tests cover symlinks, hard links, empty files, large files, conflicts — never touch real files
-- [ ] `uv run pytest` green, `ruff check .` / `ruff format --check .` clean
+- [x] `scan` reports counts by category, total size, duplicate-candidate stats — read-only
+- [x] `organise --by-type` / `--by-date` / both, driven by a configurable rules file
+- [x] `dedupe` uses size → partial hash → SHA-256 tiering, never filename/size alone
+- [x] Every modifying command defaults to dry-run; `--apply` required to act; never silent-overwrite
+- [x] Every modifying command writes a transaction log; `undo <id>` restores it
+- [x] Protected-path guardrail blocks OS/`.git`/venv/`node_modules` dirs unless overridden
+- [x] Tests cover symlinks, hard links, empty files, large files, conflicts — never touch real files
+- [x] `uv run pytest` green, `ruff check .` / `ruff format --check .` clean
 - [ ] Ship gate passes (`/ship`)
 
 ## Project-specific notes
@@ -34,3 +34,10 @@ runtime network or DB dependencies.
   read that before continuing, not just this file.
 - Package `file_organiser`; CLI/repo name stays `file-organiser` (not `filetool`) for consistency
   with the already-created GitHub repo.
+- **Local pytest needs `--basetemp`** pointing somewhere writable; this machine's sandbox blocks
+  the shared `%TEMP%`. Deliberately not in `pyproject.toml` — it's machine-specific and would
+  break CI and clean clones.
+- `execute.py` is the only module that writes to disk. Keep it that way: `scanning` and
+  `organise` staying pure is what makes the dry-run preview trustworthy.
+- Deferred, with reasoning in `NOTES.md` → Open questions: GUI, EXIF dates, write-ahead
+  journaling, interactive keeper selection.
