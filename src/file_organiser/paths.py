@@ -18,6 +18,9 @@ from fnmatch import fnmatch
 from pathlib import Path
 
 DEFAULT_EXCLUDES: tuple[str, ...] = (
+    # This tool's own transaction log and quarantine. Scanning it would offer to
+    # reorganise the very records undo depends on.
+    ".file-organiser",
     ".git",
     ".hg",
     ".svn",
