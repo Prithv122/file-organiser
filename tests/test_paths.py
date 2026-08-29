@@ -57,18 +57,28 @@ def test_subfolder_of_home_is_allowed(tmp_path: Path, monkeypatch: pytest.Monkey
     assert guard_target(downloads) == downloads.resolve()
 
 
-def test_drive_root_is_rejected() -> None:
-    root = Path(Path.cwd().anchor)
-    with pytest.raises(ProtectedPathError, match=r"drive root|protected|contains"):
-        guard_target(root)
-
-
 def test_system_location_is_rejected() -> None:
-    roots = [r for r in protected_roots() if r.is_dir()]
+    """A system directory is refused as a target.
+
+    Drive roots are filtered out deliberately: on POSIX ``/`` is both a protected
+    root and the drive root, and the drive-root guard fires first, so including
+    it would test a different branch than the one named here.
+    """
+    roots = [r for r in protected_roots() if r.is_dir() and r != Path(r.anchor)]
     if not roots:  # pragma: no cover - a machine with no resolvable system dirs
-        pytest.skip("no protected system roots resolvable here")
+        pytest.skip("no non-root protected system directories resolvable here")
     with pytest.raises(ProtectedPathError, match="protected"):
         guard_target(roots[0])
+
+
+def test_drive_root_is_refused_however_it_is_classified() -> None:
+    """The volume root must be refused; which guard catches it is incidental.
+
+    On Windows it trips the drive-root check; on POSIX ``/`` is also a protected
+    system root. Both are correct, and the messages differ.
+    """
+    with pytest.raises(ProtectedPathError):
+        guard_target(Path(Path.cwd().anchor))
 
 
 def test_force_overrides_every_guard(tmp_path: Path) -> None:
