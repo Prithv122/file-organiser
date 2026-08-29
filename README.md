@@ -99,7 +99,9 @@ Where the work is eliminated, per run:
 
 **Reading this honestly:** the size filter does nearly all the work (3,000 → 803). The partial-hash tier removes a further 87 files, about 11% of the remaining candidates. On a corpus of random bytes, same-size files rarely share a head and tail, so this understates what the partial tier contributes on real data — where many same-type files *do* share long headers, and where it also avoids fully reading very large near-identical media files.
 
-Test suite: **163 tests**, 92% line coverage, covering symlinks, hard links, empty files, files larger than one read chunk, permission errors, filename collisions on disk and within a batch, and a full organise → undo round trip asserted byte-for-byte.
+Test suite: **168 tests**, 92% line coverage, covering symlinks, hard links, empty files, files larger than one read chunk, permission errors, filename collisions on disk and within a batch, and a full organise → undo round trip asserted byte-for-byte.
+
+A few tests are platform-gated, so the suite is run on both: **167 pass on Linux** (CI) and **163 on Windows** (development), with the remainder skipped as not applicable — POSIX permission semantics don't exist on Windows, and creating symlinks on Windows needs developer mode. Neither platform runs the whole suite alone, which is the point of running both.
 
 ## 6. How to run
 

@@ -8,7 +8,7 @@ Form: **action → technical specifics → measured outcome.** Numbers or it doe
 
 - Built a transactional file-management CLI (Python 3.13, Typer) with a tiered duplicate detector — size → head/tail sample → SHA-256 — benchmarked at **25–28× faster than naive full hashing** (1.2 s vs 30–33 s on a 3,000-file, 152 MB corpus), with the benchmark asserting both approaches return identical duplicate groups.
 - Designed a quarantine-plus-transaction-log model so every destructive operation is reversible: each run writes a JSON transaction that `undo` replays backwards, and duplicates are moved rather than unlinked, trading deferred space reclamation for guaranteed recoverability.
-- Hardened the destructive paths against the failure modes that make cleanup tools untrustworthy — content-only duplicate evidence, no silent overwrites, forced renaming on within-batch filename collisions, and a re-hash TOCTOU check immediately before deletion — covered by **163 tests at 92% line coverage** including symlinks, hard links, empty files and permission errors.
+- Hardened the destructive paths against the failure modes that make cleanup tools untrustworthy — content-only duplicate evidence, no silent overwrites, forced renaming on within-batch filename collisions, and a re-hash TOCTOU check immediately before deletion — covered by **168 tests at 92% line coverage** including symlinks, hard links, empty files and permission errors, run on both Windows and Linux CI.
 
 ## Which roles this supports
 

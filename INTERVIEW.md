@@ -95,13 +95,21 @@ removes another 87. And that understates it, because the corpus is random bytes;
 real files of the same type share long headers, which is precisely the case the
 head+tail sampling is designed for.
 
-For correctness, there are 163 tests at 92% coverage, deliberately aimed at the
+For correctness, there are 168 tests at 92% coverage, deliberately aimed at the
 cases that break naive implementations: same name/different content, same
 size/different content, same content across different names and folders and
 timestamps, empty files, symlinks, hard links, files bigger than one read chunk,
 permission errors, and filename collisions both on disk and within a single
 batch. Plus a round trip that organises a tree by type and date and asserts undo
 returns it byte-for-byte.
+
+Worth adding: CI runs on Linux and I develop on Windows, and that caught a real
+bug. Some of those tests are platform-gated — Windows needs developer mode for
+symlinks, POSIX permission bits don't exist there — so 163 run locally and 167 on
+CI. Neither platform runs the whole suite. CI also caught a test that had baked
+in a Windows-specific error message: on POSIX, `/` is both the drive root and a
+protected system directory, so a different guard fired first. The behaviour was
+right on both platforms; the assertion was wrong.
 
 ### Q5. Your dry-run is the default and you have undo. Isn't that redundant — why build both?
 
