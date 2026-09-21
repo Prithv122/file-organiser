@@ -26,7 +26,7 @@ runtime network or DB dependencies.
 - [x] Protected-path guardrail blocks OS/`.git`/venv/`node_modules` dirs unless overridden
 - [x] Tests cover symlinks, hard links, empty files, large files, conflicts — never touch real files
 - [x] `uv run pytest` green, `ruff check .` / `ruff format --check .` clean
-- [ ] Ship gate passes (`/ship`)
+- [ ] Ship gate passes
 
 ## Project-specific notes
 
